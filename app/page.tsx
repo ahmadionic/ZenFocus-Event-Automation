@@ -45,36 +45,27 @@ export default function WorkshopLandingPage() {
   };
 
   const handleStripePayment = async () => {
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    try {
-      // 🔥 FB Pixel: InitiateCheckout event
-      fbEvent("InitiateCheckout", {
-        value: 97,
-        currency: "USD",
-        content_name: "Sales Engine Workshop",
-      });
+  try {
+    // 🔥 FB Pixel: InitiateCheckout event (optional)
+    fbEvent("InitiateCheckout", {
+      value: 97,
+      currency: "USD",
+      content_name: "Sales Engine Workshop",
+    });
 
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+    // 👉 Stripe skip → direct success page
+    window.location.href = "/success?session_id=test";
 
-      const data = await res.json();
+  } catch (err: any) {
+    setError("Something went wrong.");
+    setLoading(false);
+  }
+};
 
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Could not create payment session.");
-      }
-
-      // Redirect to Stripe Hosted Checkout
-      window.location.href = data.url;
-    } catch (err: any) {
-      setError(err.message || "An error occurred.");
-      setLoading(false);
-    }
-  };
+   
   // handleNextStep advances the form from step 1 → step 2
 
   return (
