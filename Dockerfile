@@ -1,23 +1,23 @@
-# 1️⃣ Base image
+# Use Node 20 Alpine
 FROM node:20-alpine
 
-# 2️⃣ Working directory
+# Set working directory
 WORKDIR /app
 
-# 3️⃣ Copy package.json & package-lock.json
+# Copy package files
 COPY package*.json ./
 
-# 4️⃣ Install dependencies
+# Install all dependencies (including devDependencies)
 RUN npm install
 
-# 5️⃣ Copy all project files
+# Copy all source code
 COPY . .
 
-# 6️⃣ Build Next.js app
+# Build the Next.js project
 RUN npm run build
 
-# 7️⃣ Expose port (Next.js default port)
+# Expose default Next.js port
 EXPOSE 3000
 
-# 8️⃣ Start app
-CMD ["npm", "run", "start"]
+# Start the app
+CMD ["npm", "start"]
